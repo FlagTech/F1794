@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ESP32物聯網</title>
+  <style type="text/css">
+    body {
+      font-family: "微軟正黑體", "黑體-繁", sans-serif;
+    }
+
+    #chartCanvas {
+      width: 80%;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>感測器數據</h1>
+  <p>感測值1：<span id="sens1">???</span></p>
+  <p>感測值2：<span id="sens2">???</span></p>
+
+  <div id="chartCanvas">
+    <canvas id="liveChart"></canvas>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/min/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@1.8.0"></script>
+  <script>
+    $(function () {
+      let hostname = window.location.hostname;
+      // 圖表物件
+      let ctx = $('#liveChart');
+
+      // 繪圖
+      let myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          datasets: [{
+            label: "感測值1",
+            //backgroundColor: "#7ECEF4",
+            data: []
+          }, {
+            label: "感測值2",
+            //backgroundColor: "#008DCB",
+            data: []
+          }]
+        },
+
+        options: {
+          scales: {
+            xAxes: [{
+              type: 'realtime',
+              realtime: {
+                delay: 2000
+              }
+            }]
+          }
+        }
+      });
+
+      function getData() {
+        $.getJSON("/sensors.json", function (data) {
+          $("#sens1").text(data.sens1);
+          $("#sens2").text(data.sens2);
+
+          // 在圖表中新增資料
+          myChart.data.datasets[0].data.push({
+            x: Date.now(),
+            y: data.sens1
+          });
+
+          myChart.data.datasets[1].data.push({
+            x: Date.now(),
+            y: data.sens2
+          });
+
+          myChart.update({
+            preservation: true
+          });
+        });
+      }
+
+      getData();
+      window.setInterval(function () {
+        getData();
+      }, 2000);
+    });
+  </script>
+</body>
+
+</html>

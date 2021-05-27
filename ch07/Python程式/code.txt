@@ -1,0 +1,13 @@
+from PIL import Image, ImageOps
+
+im = Image.open(r'd:\bmp\_02d.bmp') # 請自行修改路徑
+im = im.convert('L')
+im = ImageOps.invert(im)
+xbm = im.convert('1').tobitmap('_02d ')  # 轉成XBM格式
+
+src = xbm.decode('utf-8') 
+begin = src.find('{')
+code = src[begin:]
+
+src_code = 'const unsigned char _02d[] = ' + code
+print(src_code)

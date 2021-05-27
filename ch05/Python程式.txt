@@ -1,0 +1,25 @@
+# 參閱5-17頁
+
+.\bdfconv ..\bdf\unifont.bdf -b 0 -f 1 -m "49,50,51" -d ..\bdf\unifont.bdf -n myFont -o myFont.h
+
+# 參閱5-18頁
+
+.\bdfconv ..\bdf\unifont.bdf -b 0 -f 1 -m "48-57,97-122" -d ..\bdf\unifont.bdf -n myFont -o myFont.h
+
+# 參閱5-21頁
+
+txt = "自造者"
+["${:x}".format(ord(c)) for c in txt]
+
+# 參閱5-22頁
+
+def utf8code(txt):
+    return ','.join("${:x}".format(ord(c)) for c in txt)
+
+utf8code('自造者')
+
+
+# 參閱5-23頁
+
+bdfconv ..\bdf\unifont.bdf -b 0 -f 1 -m "$4fe1,$5fc3,$6e90,$81ea,$65e5,$5e38,$7a4d,$7d2f" -d ..\bdf\unifont.bdf -n myFont -o myFont.h
+

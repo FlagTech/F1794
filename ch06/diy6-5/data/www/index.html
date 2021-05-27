@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ESP32物聯網</title>
+  <link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      font-family: "微軟正黑體", "黑體-繁", sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+  感測值： <span id="LDR">??</span>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script>
+    $(function () {
+      function getData() {
+        $.get("/LDR", function (data) {
+          $("#LDR").text(data);
+        });
+      }
+      getData();
+      window.setInterval(function () {
+        getData();
+      }, 2000);
+    });
+  </script>
+</body>
+
+</html>

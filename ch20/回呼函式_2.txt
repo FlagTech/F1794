@@ -1,0 +1,12 @@
+// 參閱20-5頁
+
+function fetch(result) {
+  let data;  
+  setTimeout(function() {
+    data = 123;
+    result(data);
+  }, 1000);
+}
+fetch((data)=>{
+  console.log('收到資料：', data);
+});

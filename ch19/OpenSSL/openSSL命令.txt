@@ -1,0 +1,15 @@
+// 參閱19-33頁
+openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout server.key -out server.cer -config req.conf -sha256
+
+// 參閱19-34頁（不用執行這一行）
+openssl req -nodes -newkey rsa:2048 -keyout server.key -out server.csr
+
+
+// 參閱19-35頁
+openssl rsa -in server.key -outform DER -out server.key.DER
+
+openssl x509 -in server.cer -outform DER -out server.cer.DER
+
+
+// 參閱19-36頁
+openssl pkcs12 -export -in server.cer -inkey server.key -out server.pfx

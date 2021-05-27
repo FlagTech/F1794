@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>藍牙控制器</title>
+    <link href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        body {
+            font-family: "微軟正黑體", "黑體-繁", sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>ESP32藍牙控制器</h1>
+    <button id="connBtn">連接藍牙週邊</button>
+    <p>裝置名稱：<span id="deviceName"></span></p>
+    <p>磁力值：<span id="magnet"></span></p>
+
+    LED開關：
+    <div id="LED_SW">
+        <input type="radio" id="LED_ON" class="SW" value="on" name="SW">
+        <label for="LED_ON"> 開 </label>
+        <input type="radio" id="LED_OFF" class="SW" checked="checked" value="off" name="SW">
+        <label for="LED_OFF"> 關</label>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+
+    <script>
+        const UART_SERVICE = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+        const RX_UUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+        const TX_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+        var BLEDevice = null;
+        var UARTService = null;
+
+        async function connectBLE() {
+            let opt = {
+                filters: [
+                    { namePrefix: 'ESP32' },
+                    { services: [UART_SERVICE] }
+                ],
+                //optionalServices: ['battery_service']
+            }
+
+            try {
+                console.log('請求BLE裝置連線…');
+                BLEDevice = await navigator.bluetooth.requestDevice(opt);
+                console.log('裝置名稱：' + BLEDevice.name);
+                $("#deviceName").text(BLEDevice.name);
+
+                console.log('連接GATT伺服器…');
+                const server = await BLEDevice.gatt.connect();
+
+                console.log('取得UART服務…');
+                UARTService = await server.getPrimaryService(UART_SERVICE);
+
+                console.log('取得TX特徵…');
+                const txChar = await UARTService.getCharacteristic(TX_UUID);
+
+                await txChar.startNotifications();
+
+                txChar.addEventListener('characteristicvaluechanged',
+                    e => {
+                        let val = e.target.value;
+                        let str = new TextDecoder("utf-8").decode(val)
+                        $('#magnet').text(str)
+                    }
+                );
+
+            } catch (err) {
+                console.log('出錯啦～' + err);
+            }
+        }
+
+        $("#connBtn").click((e) => {
+            if (!navigator.bluetooth) {
+                console.log('你的瀏覽器不支援Web Bluetooth API，換一個吧～');
+                return false;
+            }
+
+            connectBLE();
+        });
+
+
+        $("#LED_SW").buttonset();
+        $(".SW").change(async e => {
+            if (!BLEDevice) {
+                return;
+            }
+            let state = e.target.value;
+            let enc = new TextEncoder();
+            console.log("LED: " + state);
+            if (BLEDevice.gatt.connected) {
+                const rxChar = await UARTService.getCharacteristic(RX_UUID);
+                rxChar.writeValue(enc.encode(state));
+            } else {
+                return;
+            }
+        });
+
+    </script>
+</body>
+
+</html>

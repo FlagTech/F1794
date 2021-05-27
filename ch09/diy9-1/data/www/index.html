@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ESP32物聯網</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style type="text/css">
+        body {
+            font-family: "微軟正黑體", "黑體-繁", sans-serif;
+        }
+
+        #slider {
+            width: 300px;
+            margin: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>感測值</h2>
+    <p>光敏電阻：<span id="LDR">???</span></p>
+    <h2>燈光控制器</h2>
+    <div id="slider"></div>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        // 取得目前頁面的網址（如：192.118.0.13）
+        var hostName = window.location.host;
+
+        $(function () {
+            let url = "ws://" + hostName + "/ws";
+            let ws;
+
+            wsInit(url);
+
+            function wsInit(url) {
+                ws = new WebSocket(url);
+                ws.onopen = function (evt) {
+                    console.log("已連上ESP32伺服器");
+                };
+                ws.onclose = function (evt) {
+                    console.log("已斷線");
+                };
+                ws.onerror = function (evt) {
+                    console.log("出錯了：" + evt.data);
+                };
+                ws.onmessage = function (evt) {
+                    console.log("收到訊息：" + evt.data);
+                    // 把字串轉成JSON物件
+                    let msg = JSON.parse(evt.data);
+                    if (msg.device == "LDR") {
+                        $("#LDR").text(msg.val);
+                    }
+                };
+            }
+
+            $("#slider").slider({
+                orientation: "horizontal",
+                range: "max",
+                max: 1023,
+                value: 0,
+                // 底下的事件名稱改回change，則只有在「放開滑鼠鈕」時才會送出資料。
+                slide: function () {
+                    var data = $(this).slider("value");
+                    msg = { "device": "LED", "val": data };
+                    // 把JSON格式資料轉成字串
+                    ws.send(JSON.stringify(msg));
+                    console.log("已送出：" + JSON.stringify(msg));
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

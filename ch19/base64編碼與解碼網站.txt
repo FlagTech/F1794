@@ -1,0 +1,5 @@
+影像編碼：
+https://www.base64-image.de/
+
+解碼：
+https://decoder.link/result

@@ -1,0 +1,11 @@
+Motor	KEYWORD1
+drive	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+FORWARD		LITERAL1
+BACKWARD	LITERAL1
+LEFT		LITERAL1
+RIGHT		LITERAL1
+STOP		LITERAL1

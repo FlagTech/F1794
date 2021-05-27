@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+        href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    <link rel="stylesheet"
+        href="https://maxst.icons8.com/vue-static/landings/line-awesome/font-awesome-line-awesome/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <title>ESP32藍牙智能小車控制器</title>
+</head>
+
+<body>
+    <h1>小車控制器</h1>
+    <header>
+        <div id="battery"><i class="las la-battery-empty"></i><span id="battLevel">0</span>%</div>
+        <button id="connBtn"><i class="lab la-bluetooth-b"></i>連線</button>
+    </header>
+    <div id="controller">
+        <div class="dpad">
+            <button id="forwardBtn" class="up"><i class="las la-angle-up"></i></button>
+        </div>
+        <div class="dpad">
+            <button id="leftBtn" class="left"><i class="las la-angle-left"></i></button>
+            <button id="stopBtn" class="stop"><i class="las la-times"></i></button>
+            <button id="rightBtn" class="right"><i class="las la-angle-right"></i></button>
+        </div>
+        <div class="dpad">
+            <button id="backwardBtn" class="down"><i class="las la-angle-down"></i></button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

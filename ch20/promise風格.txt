@@ -1,0 +1,19 @@
+// 參閱20-7頁
+
+let p = new Promise((resolve, reject)=>{
+  setTimeout(()=>{
+    if (true) {
+      let data = 123;
+      resolve(data);
+    } else {
+      let err = "今日公休";
+      reject(err);
+    }
+  }, 1000);
+});
+
+p.then(data=>{
+  console.log('收到資料：' + data);
+}).catch(err=>{
+  console.log('出錯了～' +  err);
+});

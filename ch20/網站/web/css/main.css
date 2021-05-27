@@ -1,0 +1,63 @@
+body {
+    font-family: "微軟正黑體", "黑體-繁", sans-serif;
+}
+
+button {
+    display: block;
+    width: 20%;
+    height: 50px;
+    margin: 5px;
+    padding: 5px 0;
+    background: #2e7feb;
+    color: #fff;
+    border: 0;
+    border-radius: 4px;
+    font-style: normal;
+    font-size: 1.2em;
+}
+
+button:disabled {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+}
+
+button.up, button.left, button.stop, button.right, button.down {
+    background: #f18406;
+    width: 30%;
+    height: 60px;
+    font-size: 2em;
+}
+
+button:active {
+    background-color: rgb(255, 195, 30);
+}
+
+#controller {
+    display: none;
+}
+
+.dpad {
+    display: flex;
+    justify-content: center;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+}
+
+header>* {
+    margin: 20px;
+}
+
+#battery {
+    font-size: 1.2em;
+    align-items: flex-start;
+}
+
+#battery>i {
+    font-size: 36px;
+    vertical-align: middle;
+    margin: 0 5px;
+}

@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>上傳檔案到SPIFFS</title>
+  <style type="text/css">
+    body {
+      font-family: "微軟正黑體", "黑體-繁", sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>上傳檔案</h1>
+  <form method="post" enctype="multipart/form-data" action="/upload">
+    <input type="file" name="filename">
+    <input type="submit" value="上傳檔案">
+  </form>
+</body>
+
+</html>

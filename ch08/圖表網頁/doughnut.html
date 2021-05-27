@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>食物熱量表</title>
+    <style type="text/css">
+        body {
+            font-family: "微軟正黑體", "黑體-繁", sans-serif;
+        }
+
+        #chartCanvas {
+            width: 800px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="chartCanvas">
+        <canvas id="foodChart"></canvas>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <script>
+        Chart.defaults.global.defaultFonFamily = "'微軟正黑體', '黑體-繁', sans-serif";
+        Chart.defaults.global.defaultFontSize = 18;
+        Chart.defaults.global.defaultFontColor = '#623821';
+
+        var ctx = document.getElementById('foodChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'doughnut',
+
+            data: {
+                labels: ['三鮮燴飯', '燒餅油條', '肉絲蛋炒飯', '炸排骨便當', '薯條', '炸雞腿'],
+                datasets: [{
+                    label: '熱量',
+                    data: [513, 415, 718, 925, 236, 468],
+                    borderColor: '#777',
+                    backgroundColor: ['#e4b61a', '#fee970', '#dbd7d4', '#9b9183', '#98942e', '#d3c265']
+                }]
+            },
+
+            options: {
+                title: {
+                    display: true,
+                    text: '食物熱量表',
+                    fontSize: 25
+                },
+                legend: {
+                    position: 'right'
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

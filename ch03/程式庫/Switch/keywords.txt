@@ -1,0 +1,2 @@
+Switch	KEYWORD1
+check	KEYWORD2

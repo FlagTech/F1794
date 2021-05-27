@@ -1,0 +1,21 @@
+// 參閱20-5頁
+
+function fetch() {
+  let data;  // 宣告區域變數
+  setTimeout(function() {
+    data = 123;
+    return data;
+  }, 1000);
+}
+console.log('收到資料：', fetch());
+
+
+
+function fetch() {
+  let data;  // 宣告區域變數
+  setTimeout(()=>{
+    data = 123;
+    return data;
+  }, 1000);
+}
+console.log('收到資料：', fetch());

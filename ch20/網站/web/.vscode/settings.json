@@ -1,0 +1,8 @@
+{
+    "liveServer.settings.https": {
+        "enable": true,
+        "cert": "D:\\cert\\server.cer", // 請自行修改路徑
+        "key": "D:\\cert\\server.key", // 請自行修改路徑
+        "passphrase": "12345" // 請輸入你的憑證密碼
+    }
+}

@@ -1,0 +1,15 @@
+// 參閱5-20頁
+
+"ESP32控制板".charCodeAt(5).toString(16)
+
+
+// 參閱5-20頁
+
+function getCode(str) {
+    let codeArr = [];          // 宣告空白陣列變數
+    let strLen = str.length;   // 取得字串的長度
+    for (let i = 0; i < strLen; i++) {
+        codeArr[i] = "$" + str.charCodeAt(i).toString(16);
+    }
+    return codeArr.join();
+}
