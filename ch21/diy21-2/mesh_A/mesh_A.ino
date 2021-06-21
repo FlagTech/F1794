@@ -58,7 +58,7 @@ void receivedCallback( uint32_t from, String &msg ) {
   }
 
   if (doc["type"] == "LDR") {     // 光敏的訊息
-    int8_t val = doc["val"];
+    int16_t val = doc["val"];
     const char * n = doc["name"];
     Serial.printf("亮度：%u, 節點：%s, ID：%u\n", val, n, from);
   }
