@@ -6,8 +6,8 @@ bool prev = 0;         // 暫存CLK腳的前次值
 
 void setup() {
   Serial.begin(115200);
-  pinMode(CLK_PIN, INPUT_PULLUP);
-  pinMode(DT_PIN, INPUT_PULLUP);
+  pinMode(CLK_PIN, INPUT);
+  pinMode(DT_PIN, INPUT);
 
   prev = digitalRead(CLK_PIN);      // 讀取CLK腳的值
 }

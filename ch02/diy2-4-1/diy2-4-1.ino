@@ -2,7 +2,7 @@
 #define BUZZER_PIN 22  // 蜂鳴器接在腳22
 
 void setup() {
-  ledcSetup(0, 2000, BITS);   // PWM預設為20KHz，10位元解析度。
+  ledcSetup(0, 20000, BITS);   // PWM預設為20KHz，10位元解析度。
   ledcAttachPin(BUZZER_PIN, 0);
 }
 

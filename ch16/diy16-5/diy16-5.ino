@@ -59,10 +59,10 @@ void loop() {
         bleKB.click();     // 點擊滑鼠左鍵
         break;
       case RotarySwitch::TURN_RIGHT:      // 旋鈕右轉
-        bleKB.move(0,0,-1);   // 往上滑動滾輪
+        bleKB.move(0,0,1);   // 往上滑動滾輪
         break;
       case RotarySwitch::TURN_LEFT:       // 旋鈕左轉
-        bleKB.move(0,0,1);    // 往下滑動滾輪
+        bleKB.move(0,0,-1);    // 往下滑動滾輪
         break;
     }
   }

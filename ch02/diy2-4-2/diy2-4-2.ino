@@ -2,7 +2,7 @@
 #define BUZZER_PIN 22
 
 void setup() {
-  ledcSetup(0, 2000, BITS);
+  ledcSetup(0, 20000, BITS);
   ledcAttachPin(BUZZER_PIN, 0);
 }
 

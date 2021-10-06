@@ -38,8 +38,8 @@ void setup() {
 
   server.on("/sensors.json", HTTP_GET, [](AsyncWebServerRequest *req) {
     StaticJsonDocument<50> data;
-    data["sens1"] = analogRead(A4);
-    data["sens2"] = analogRead(A6);
+    data["sens1"] = analogRead(A0);
+    data["sens2"] = analogRead(A3);
 
     String resp;
     serializeJson(data, resp);
