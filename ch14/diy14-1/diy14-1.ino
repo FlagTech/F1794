@@ -1,19 +1,19 @@
 #include <WiFi.h>
 #include <Audio.h>
 
-#define I2S_DOUT      26  // 接模組的DIN
+#define I2S_DOUT      25  // 接模組的DIN
 #define I2S_BCLK      27  // 接模組的BCK
-#define I2S_LRC       25  // 接模組的LCK
+#define I2S_LRC       26  // 接模組的LCK
 #define MAX_VOL       21  // 最高音量
 #define VOL_UP        22  // 音量（升）腳
-#define VOL_DOWN      21  // 音量（降）腳
+#define VOL_DOWN      19  // 音量（降）腳
 
 Audio audio;
 
 const char* ssid = "Wi-Fi名稱";
 const char* pwd = "Wi-Fi密碼";
 
-byte volume = 10;    // 初始音量
+uint8_t volume = 10;    // 初始音量
 
 void setup() {
   Serial.begin(115200);
@@ -28,8 +28,9 @@ void setup() {
   Serial.println("已連接Wi-Fi");
   audio.setPinout(I2S_BCLK, I2S_LRC, I2S_DOUT);
   audio.setVolume(volume); // 0...21
+  audio.connecttohost("http://mp3.ffh.de/radioffh/hqlivestream.mp3");
   // ICRT電台
-  audio.connecttohost("https://live.leanstream.co/ICRTFM-MP3");
+  // audio.connecttohost("https://live.leanstream.co/ICRTFM-MP3");
   // TED Talks
   //audio.connecttohost("https://tunein.streamguys1.com/TEDTalks");
   // 新加坡Yes 93.3 FM
@@ -70,9 +71,11 @@ void audio_info(const char *info){
 void audio_showstation(const char *info){
     printf("電台   ：%s\n", info);
 }
-void audio_showstreaminfo(const char *info){
-    printf("串流資訊：%s\n", info);
-}
+
 void audio_showstreamtitle(const char *info){
     printf("串流標題：%s\n", info);
+}
+
+void audio_bitrate(const char *info){
+    printf("位元率：%s\n", info);
 }

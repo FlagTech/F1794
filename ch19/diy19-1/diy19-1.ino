@@ -1,3 +1,4 @@
+#include <WiFi.h>
 #include <WiFiClientSecure.h>
 #define CHANNEL_ID "你的ThingSpeak頻道ID"
 #define API_KEY "你的ThingSpeak API碼"   // READ API碼

@@ -161,7 +161,8 @@ void BleKeyboardMouse::setBatteryLevel(uint8_t level)
 void BleKeyboardMouse::taskServer(void *pvParameter)
 {
 	BleKeyboardMouse *BleKBMouseObj = (BleKeyboardMouse *)pvParameter; //static_cast<BleKeyboardMouse *>(pvParameter);
-	BLEDevice::init(BleKBMouseObj->deviceName);
+	// BLEDevice::init(BleKBMouseObj->deviceName);
+	BLEDevice::init(String(BleKBMouseObj->deviceName.c_str()));
 	BLEServer *pServer = BLEDevice::createServer();
 	pServer->setCallbacks(BleKBMouseObj->connectionStatus);
 
@@ -178,7 +179,8 @@ void BleKeyboardMouse::taskServer(void *pvParameter)
 
 	BleKBMouseObj->outputKeyboard->setCallbacks(new KeyboardOutputCallbacks());
 
-	BleKBMouseObj->hid->manufacturer()->setValue(BleKBMouseObj->deviceManufacturer);
+	// BleKBMouseObj->hid->manufacturer()->setValue(BleKBMouseObj->deviceManufacturer);
+	BleKBMouseObj->hid->manufacturer()->setValue(String(BleKBMouseObj->deviceManufacturer.c_str()));
 
 	/*
      bleMouseInstance->hid->pnp(0x02, 0xe502, 0xa111, 0x0210);

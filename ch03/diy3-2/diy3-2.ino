@@ -16,7 +16,11 @@ void lightUp() {
   if ((pwmVal + CHANG_VAL) <= 1023) {
     pwmVal += CHANG_VAL;
     Serial.println(pwmVal);
+  #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+    ledcWrite(LED, pwmVal);
+  #else
     ledcWrite(0, pwmVal);
+  #endif
   }
 }
 
@@ -24,7 +28,11 @@ void lightDown() {
   if ((pwmVal - CHANG_VAL) >= 0) {
     pwmVal -= CHANG_VAL;
     Serial.println(pwmVal);
+  #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+    ledcWrite(LED, pwmVal);
+  #else
     ledcWrite(0, pwmVal);
+  #endif
   }
 }
 
@@ -35,8 +43,13 @@ void setup() {
   // 設定類比輸出
   analogSetAttenuation(ADC_11db);
   analogSetWidth(BITS);
-  ledcSetup(0, 5000, BITS);
+
+#if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+  ledcAttachChannel(LED, 5000, BITS, 0);  // 接腳, 頻率, 解析度, 通道
+#else
+  ledcSetup(0, 5000, BITS);   // PWM預設為20KHz，10位元解析度。
   ledcAttachPin(LED, 0);
+#endif
 }
 
 void loop() {

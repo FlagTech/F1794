@@ -37,7 +37,11 @@ void receivedCallback( uint32_t from, String &msg ) {
   }
 
   if (doc["type"] == "dimmer") {  // "調光器"訊息
+  #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+    ledcWrite(LED_BUILTIN, doc["val"]);
+  #else
     ledcWrite(0, doc["val"]);
+  #endif
   }
 }
 
@@ -50,8 +54,13 @@ void setup() {
   Serial.begin(115200);
   analogSetAttenuation(ADC_11db);  // 設定類比輸入
   analogSetWidth(BITS);
-  ledcSetup(0, 5000, 10);  // 通道0, 5KHz, 10位元
-  ledcAttachPin(LED_BUILTIN, 0);
+
+#if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+  ledcAttachChannel(LED_BUILTIN, 5000, BITS, 0);  // 接腳, 頻率, 解析度, 通道
+#else
+  ledcSetup(0, 5000, BITS);        // 設定PWM，通道0、5KHz、10位元
+  ledcAttachPin(LED_BUILTIN, 0);   // 指定內建的LED接腳成PWM輸出
+#endif
 
   mesh.init( MESH_PREFIX, MESH_PASSWORD, &userScheduler, MESH_PORT );
   mesh.onReceive(receivedCallback);

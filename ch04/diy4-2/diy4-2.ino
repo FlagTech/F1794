@@ -31,8 +31,12 @@ void IRAM_ATTR ISR() {  // 中斷服務常式
 }
 
 void setup() {
-  ledcSetup(0, 2000, BITS);      // PWM預設為20KHz，10位元解析度。
+#if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+  ledcAttachChannel(BUZZER_PIN, 2000, BITS, 0);  // 接腳, 頻率, 解析度, 通道
+#else
+  ledcSetup(0, 2000, BITS);   // PWM預設為20KHz，10位元解析度。
   ledcAttachPin(BUZZER_PIN, 0);
+#endif
   pinMode(INT_PIN, INPUT);     // 接PIR或微波感測模組的訊號輸出
   attachInterrupt(INT_PIN, ISR, RISING); 
 }

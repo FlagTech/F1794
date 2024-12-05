@@ -1,3 +1,4 @@
+#include <WiFi.h>  // 要引用此程式庫
 #include <HTTPClient.h>
 
 const char* ssid = "Wi-Fi名稱";

@@ -1,3 +1,4 @@
+#include <WiFi.h>
 #include <SPIFFS.h>  // 引用操作SPIFFS的程式庫
 #include <WiFiClientSecure.h>
 #define CA_FILE "/thingspeak.cer"    // 憑證檔名   

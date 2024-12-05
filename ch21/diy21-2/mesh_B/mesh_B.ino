@@ -9,6 +9,7 @@
 #define   LED_BUILTIN     2
 #define   DHTPIN 16              // DHT11的資料接腳
 #define   DHTTYPE         DHT11  // 感測器類型
+#define   BITS 10        // 類比取樣位元
 
 String nodeName = "阿B";
 uint16_t pwmVal = 0;
@@ -49,7 +50,11 @@ void receivedCallback( uint32_t from, String &msg ) {
   }
 
   if (doc["type"] == "dimmer") {
+  #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+    ledcWrite(LED_BUILTIN, doc["val"]);
+  #else
     ledcWrite(0, doc["val"]);
+  #endif
   }
 }
 
@@ -74,8 +79,14 @@ void changedConnectionCallback() {
 
 void setup() {
   Serial.begin(115200);
-  ledcSetup(0, 5000, 10);  // 通道0, 5KHz, 10位元
-  ledcAttachPin(LED_BUILTIN, 0);    // 腳15, 通道0
+  
+#if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+  ledcAttachChannel(LED_BUILTIN, 5000, BITS, 0);  // 接腳, 頻率, 解析度, 通道
+#else
+  ledcSetup(0, 5000, BITS);        // 設定PWM，通道0、5KHz、10位元
+  ledcAttachPin(LED_BUILTIN, 0);   // 指定內建的LED接腳成PWM輸出
+#endif
+
   dht.begin();
 
   mesh.init( MESH_PREFIX, MESH_PASSWORD, &userScheduler, MESH_PORT );

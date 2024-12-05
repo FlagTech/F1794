@@ -1,4 +1,4 @@
-#include <esp_bt_device.h>
+#include <esp_bt_device.h>  // 內含esp_bt_dev_get_address()定義
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLEUtils.h>
@@ -26,7 +26,8 @@ class ServerCallbacks: public BLEServerCallbacks {
 
 class RXCallbacks: public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic *pCharact) {
-      std::string rxVal = pCharact->getValue();
+      // 加上const定義常數
+      String rxVal = pCharact->getValue();
       Serial.printf("收到輸入值：%s\n", rxVal.c_str());
 
       if (rxVal == "on") {
@@ -45,6 +46,13 @@ class TXCallbacks: public BLECharacteristicCallbacks {
       Serial.printf("code：%d\n", code);
     }
 };
+
+// 也可以用底下程式片段取得裝置位址
+// void printDeviceAddress() {
+//   BLEAddress address = BLEDevice::getAddress();
+//   Serial.print("裝置位址：");
+//   Serial.println(address.toString().c_str());
+// }
 
 void printDeviceAddress() {
   const uint8_t* point = esp_bt_dev_get_address();
@@ -99,7 +107,11 @@ void setup() {
 
 void loop() {
   if (deviceConnected) {
-    int hallVal = hallRead();
+  #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+    int hallVal = analogRead(A0);  // 讀取A0腳
+  #else
+    int hallVal = hallRead();  // 讀取霍爾感測器值
+  #endif
     char buffer[5];
     itoa(hallVal, buffer, 10);
     pCharact_TX->setValue(buffer);

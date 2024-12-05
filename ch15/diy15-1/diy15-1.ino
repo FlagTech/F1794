@@ -1,17 +1,20 @@
+#include <ESP_I2S.h>
 #include <BluetoothA2DPSink.h>
 
-BluetoothA2DPSink a2dp;   // 建立A2DP物件
+const uint8_t I2S_SCK = 27;     // 時派
+const uint8_t I2S_WS = 26;      // 左右聲道資料切換
+const uint8_t I2S_SDOUT = 25;   // 資料輸出
+I2SClass i2s;
 
-const i2s_pin_config_t i2s_pins = {
-  .bck_io_num = 27,
-  .ws_io_num = 25,
-  .data_out_num = 26,
-  .data_in_num = I2S_PIN_NO_CHANGE
-};
+BluetoothA2DPSink a2dp_sink(i2s);
 
 void setup() {
-  a2dp.set_pin_config(i2s_pins);
-  a2dp.start("ESP32高傳真音響");
-}
+    i2s.setPins(I2S_SCK, I2S_WS, I2S_SDOUT);
+    if (!i2s.begin(I2S_MODE_STD, 44100, I2S_DATA_BIT_WIDTH_16BIT, I2S_SLOT_MODE_STEREO, I2S_STD_SLOT_BOTH)) {
+      Serial.println("無法初始化I2S！");
+      while (1); 
+    }
 
-void loop() { }
+    a2dp_sink.start("ESP32高傳真音響");
+}
+void loop() {}

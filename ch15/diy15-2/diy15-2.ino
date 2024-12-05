@@ -1,20 +1,22 @@
+// 內含esp_read_mac()的標頭檔
+#include <esp_mac.h>
 #include <BluetoothSerial.h>
 
 BluetoothSerial BT; 
-
-char* pin = "9420";
+// char* pin = "9420";
 char  val;
 
 void setup(){
   Serial.begin(115200);
   pinMode(LED_BUILTIN, OUTPUT);
-  BT.setPin(pin);
+  // ESP32 Arduino開發環境預設沒有啟用以下功能
+  // BT.setPin(pin);
   BT.begin("ESP32經典好朋友");
 
   byte macBT[6];
   esp_read_mac(macBT, ESP_MAC_BT);
   Serial.printf("藍牙MAC位址：%02X:%02X:%02X:%02X:%02X:%02X\n", 
-macBT[0], macBT[1], macBT[2], macBT[3], macBT[4], macBT[5]);
+                macBT[0], macBT[1], macBT[2], macBT[3], macBT[4], macBT[5]);
 }
 
 void loop(){

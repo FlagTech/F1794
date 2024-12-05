@@ -19,8 +19,13 @@ void setup() {
   pinMode(PWM_PIN, OUTPUT);
   analogSetAttenuation(ADC_11db);  // 設定類比輸入電壓上限3.6V
   analogSetWidth(BITS);            // 取樣設成10位元
-  ledcSetup(0, 5000, BITS);        // 設定PWM，通道0、5KHz、10位元
+
+#if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+  ledcAttachChannel(PWM_PIN, 5000, BITS, 0);  // 接腳, 頻率, 解析度, 通道
+#else
+  ledcSetup(0, 5000, BITS);   // PWM預設為20KHz，10位元解析度。
   ledcAttachPin(PWM_PIN, 0);
+#endif
 
   if (!SPIFFS.begin(true)) {
     Serial.println("掛載SPIFFS分區出錯啦～");
@@ -44,7 +49,8 @@ void setup() {
 
   server.on("/sw", HTTP_GET, [](AsyncWebServerRequest * request) {
     if (request->hasParam("led")) {
-      AsyncWebParameter* p = request->getParam("led");
+      // 新版程式庫要求加上const宣告
+      const AsyncWebParameter* p = request->getParam("led");
       if (p->value() == "on") {
         digitalWrite(LED_BUILTIN, LOW);
       } else if (p->value() == "off") {
@@ -57,9 +63,13 @@ void setup() {
 
   server.on("/pwm", HTTP_GET, [](AsyncWebServerRequest * req) {
     if (req->hasParam("val")) {
-      AsyncWebParameter* p = req->getParam("val");
+      const AsyncWebParameter* p = req->getParam("val");
       pwm_val = p->value();
+    #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+      ledcWrite(PWM_PIN, pwm_val.toInt());
+    #else
       ledcWrite(0, pwm_val.toInt());
+    #endif
     }
 
     req->send(200, "text/plain", "OK");

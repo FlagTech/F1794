@@ -26,7 +26,8 @@ class ServerCallbacks : public BLEServerCallbacks {
 
 class RXCallbacks : public BLECharacteristicCallbacks{
   void onWrite(BLECharacteristic *pCharact){
-    std::string rxVal = pCharact->getValue();
+    // std::string型態改成String
+    String rxVal = pCharact->getValue();
     Serial.printf("收到輸入值：%s\n", rxVal.c_str());
 
     if (rxVal == "on"){
@@ -95,7 +96,11 @@ void setup() {
 
 void loop() {
   if (deviceConnected) {
-    int hallVal = hallRead();
+  #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+    int hallVal = analogRead(A0);  // 讀取A0腳
+  #else
+    int hallVal = hallRead();  // 讀取霍爾感測器值
+  #endif
     char buffer[5];
     itoa(hallVal, buffer, 10);
     pCharactTX->setValue(buffer);

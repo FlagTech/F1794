@@ -11,23 +11,19 @@ const int LED = LED_BUILTIN; // 定義LED接腳，設成板子內建的LED。
 bool bleConnected = false;
 BLECharacteristic *pCharact_TX;
 
-class ServerCallbacks : public BLEServerCallbacks
-{
-  void onConnect(BLEServer *pServer)
-  {
+class ServerCallbacks : public BLEServerCallbacks {
+  void onConnect(BLEServer *pServer) {
     bleConnected = true;
   };
 
-  void onDisconnect(BLEServer *pServer)
-  { // 斷線回呼
+  void onDisconnect(BLEServer *pServer) { // 斷線回呼
     bleConnected = false;
     Serial.println("連線中斷");
     BLEDevice::startAdvertising(); // 重新發出廣告
   }
 };
 
-void setup()
-{
+void setup() {
   Serial.begin(115200);
   pinMode(LED, OUTPUT);
 
@@ -38,7 +34,7 @@ void setup()
   pCharact_TX = pService->createCharacteristic(                // 定義TX特徵物件的內容
       CHARACTERISTIC_UUID_TX,                                  // TX特徵的UUID
       BLECharacteristic::PROPERTY_NOTIFY |
-          BLECharacteristic::PROPERTY_READ);
+      BLECharacteristic::PROPERTY_READ);
   pCharact_TX->addDescriptor(new BLE2902()); // 新增描述
 
   pService->start();                  // 啟動服務
@@ -46,11 +42,9 @@ void setup()
   Serial.println("等待用戶端連線…");
 }
 
-void loop()
-{
-  if (bleConnected)
-  {
-    int hallVal = hallRead(); // 讀取霍爾感測器值
+void loop() {
+  if (bleConnected) {
+
     char buffer[5];
     itoa(hallVal, buffer, 10);
     pCharact_TX->setValue(buffer);

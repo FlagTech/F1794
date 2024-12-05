@@ -43,7 +43,11 @@ void onSocketEvent(AsyncWebSocket *server,
       if (strcmp(device, "LED") == 0)
       {
         printf("PWM: %d\n", val);
+      #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+        ledcWrite(LED_PIN, 1023 - val); // 輸出PWM
+      #else
         ledcWrite(0, 1023 - val); // 輸出PWM
+      #endif
       }
       break;
   }
@@ -66,8 +70,14 @@ void setup() {
   analogSetAttenuation(ADC_11db);
   analogSetWidth(BITS);
   pinMode(LED_PIN, OUTPUT);
-  ledcSetup(0, 5000, BITS);    // 設定PWM，通道0、5KHz、10位元
+
+#if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+  ledcAttachChannel(LED_PIN, 5000, BITS, 0);  // 接腳, 頻率, 解析度, 通道
+#else
+  ledcSetup(0, 5000, BITS);   // PWM預設為5KHz，10位元解析度。
   ledcAttachPin(LED_PIN, 0);
+#endif
+
   digitalWrite(LED_PIN, HIGH);
 
   if (!SPIFFS.begin(true)) {

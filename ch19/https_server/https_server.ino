@@ -11,7 +11,7 @@
 #include <HTTPRequest.hpp>   // 處理HTTP請求
 #include <HTTPResponse.hpp>  // 處理HTTP回應
 #include <SPIFFS.h>          // 處理SPIFFS檔案系統
-#include "cer.h"            // 憑證檔
+#include "cert.h"            // 憑證檔
 #include "private_key.h"     // 私鑰檔
 #define BITS 10              // PWM輸出解析度（10位元）
 #define PWM_PIN 15           // PWM輸出接腳
@@ -111,7 +111,11 @@ void handlePWM(HTTPRequest * req, HTTPResponse * res) {
   if (params->getQueryParameter(paramName, paramVal)) {
     pwmVal = atoi(paramVal.c_str());
     Serial.printf("收到PWM值：%u\n", pwmVal);
+  #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+    ledcWrite(PWM_PIN, pwmVal);
+  #else
     ledcWrite(0, pwmVal);
+  #endif
   }
 
   res->setHeader("Content-Type", "text/plain");
@@ -164,8 +168,13 @@ void setup() {
   pinMode(PWM_PIN, OUTPUT);
   analogSetAttenuation(ADC_11db);  // 設定類比輸入電壓上限3.6V
   analogSetWidth(BITS);            // 取樣設成10位元
+
+#if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+  ledcAttachChannel(PWM_PIN, 5000, BITS, 0);  // 接腳, 頻率, 解析度, 通道
+#else
   ledcSetup(0, 5000, BITS);        // 設定PWM，通道0、5KHz、10位元
   ledcAttachPin(PWM_PIN, 0);       // 指定內建的LED接腳成PWM輸出
+#endif
 
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {

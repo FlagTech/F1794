@@ -1,34 +1,28 @@
-// 參閱7-11頁
-
 #include <ArduinoJson.h>
+#include <WiFi.h>  // 要引用此程式庫
 #include <HTTPClient.h>
 
-const char *ssid = "Wi-Fi名稱";
-const char *password = "Wi-Fi密碼";
+const char* ssid = "Wi-Fi名稱";
+const char* password = "Wi-Fi密碼";
 String API_KEY = "你的openWeather API Key";
 String city = "Taipei,TW";
 
 HTTPClient http;
 
-String openWeather()
-{
+String openWeather() {
   String url = "http://api.openweathermap.org/data/2.5/weather?q=" +
                city + "&appid=" + API_KEY;
   String payload = "";
 
-  if ((WiFi.status() == WL_CONNECTED))
-  {
+  if ((WiFi.status() == WL_CONNECTED)) {
 
     http.begin(url);
     int httpCode = http.GET();
 
-    if (httpCode > 0)
-    {
+    if (httpCode > 0) {
       payload = http.getString();
       Serial.printf("回應本體：%s\n", payload.c_str());
-    }
-    else
-    {
+    } else {
       Serial.println("HTTP請求出錯了～");
     }
 
@@ -37,13 +31,12 @@ String openWeather()
   }
 }
 
-void parseWeather(String json)
-{
+void parseWeather(String json) {
   DynamicJsonDocument doc(800);
 
   deserializeJson(doc, json);
   JsonObject weather = doc["weather"][0];
-  const char *weather_icon = weather["icon"]; // 取得圖示名稱
+  const char* weather_icon = weather["icon"];  // 取得圖示名稱
   JsonObject main = doc["main"];
   float temp = (float)main["temp"] - 273.15;
 
@@ -51,13 +44,12 @@ void parseWeather(String json)
   Serial.printf("攝氏溫度：%.1f\n", temp);
 }
 
-void setup()
-{
+
+void setup() {
   Serial.begin(115200);
   WiFi.begin(ssid, password);
 
-  while (WiFi.status() != WL_CONNECTED)
-  {
+  while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
@@ -66,12 +58,10 @@ void setup()
 
   String payload = openWeather();
 
-  if (payload != "")
-  {
+  if (payload != "") {
     parseWeather(payload);
   }
 }
 
-void loop()
-{
+void loop() {
 }

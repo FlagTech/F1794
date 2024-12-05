@@ -2,12 +2,12 @@
 #include <Audio.h>
 #include <DHT.h>
 
-#define I2S_DOUT      26  // 接模組的DIN
+#define I2S_DOUT      25  // 接模組的DIN
 #define I2S_BCLK      27  // 接模組的BCK
-#define I2S_LRC       25  // 接模組的LCK
-#define SW            22  // 接開關
-#define LED           5   // 內建的LED
-#define DHTPIN        13  // 接DHT11
+#define I2S_LRC       26  // 接模組的LCK
+#define SW            19  // 接開關
+#define LED           22  // 內建的LED
+#define DHTPIN        32  // 接DHT11
 #define DHTTYPE       DHT11
 
 Audio audio;
@@ -65,8 +65,8 @@ void loop() {
         msg = "現在溫度攝氏" + String(t) + "度，真是" +
               texts[index] + "的好天氣啊！";
       }
-
-      audio.connecttospeech(msg, "zh"); 
+      // 從String物件取得char字串
+      audio.connecttospeech(msg.c_str(), "zh"); 
     }
   }
 

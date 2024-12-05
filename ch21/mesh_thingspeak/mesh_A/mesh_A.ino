@@ -1,3 +1,4 @@
+// source： https://gitlab.com/painlessMesh/painlessMesh
 #include "rotary_switch.h"
 #include <painlessMesh.h>
 #include <HTTPClient.h>   // 引用HTTP前端
@@ -9,9 +10,9 @@
 #define   IS_ROOT         true        // 根節點
 #define   DIM_STEP        10
 
-String thingspeak_key = "你的ThingSpeak API碼";
-const char* ssid = "Wi-Fi網路名稱";
-const char* password = "Wi-Fi密碼";
+String thingspeak_key = "你的API KEY";
+const char* ssid = "WiFi名稱";
+const char* password = "WiFi密碼";
 const char* server = "api.thingspeak.com";
 
 uint16_t  dimVal = 0;
@@ -26,6 +27,7 @@ SimpleList<uint32_t> nodes;
 IPAddress myIP(0, 0, 0, 0);
 IPAddress myAPIP(0,0,0,0);
 IPAddress getlocalIP();
+
 
 void checkDial();
 Task taskDimmer( 0 , TASK_FOREVER, checkDial );
@@ -123,7 +125,7 @@ void setup() {
 
   //mesh.setDebugMsgTypes( ERROR | MESH_STATUS | CONNECTION | SYNC | COMMUNICATION | GENERAL | MSG_TYPES | REMOTE ); // all types on
   mesh.setDebugMsgTypes( ERROR | STARTUP | CONNECTION);  // set before init() so that you can see startup messages
-
+  // mesh.init( MESH_PREFIX, MESH_PASSWORD, &userScheduler, MESH_PORT, WIFI_AP_STA, 6 );
   mesh.init( MESH_PREFIX, MESH_PASSWORD, &userScheduler, MESH_PORT );
   mesh.onReceive(receivedCallback);
   mesh.onNewConnection(newConnectionCallback);
